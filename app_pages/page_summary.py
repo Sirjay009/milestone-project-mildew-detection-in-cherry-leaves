@@ -19,6 +19,7 @@ def page_summary_body():
         f"**Project Dataset**\n"
         f"* The available dataset contains 4208 images of equally divided "
         f"healthy cherry leaves and mildew-infected leaves. "
+        )
 
     st.write(
         f"* For additional information, please visit and **read** the "
