@@ -18,15 +18,15 @@ def page_cherry_leaves_visualizer_body():
     version = 'v1'
     if st.checkbox("Difference between average and variability image"):
       
-      avg_unhealthy = plt.imread(f"outputs/{version}/avg_var_Unhealthy.png")
-      avg_healthy = plt.imread(f"outputs/{version}/avg_var_Healthy.png")
+      avg_powdery_mildew = plt.imread(f"outputs/{version}/avg_var_powdery_mildew.png")
+      avg_healthy = plt.imread(f"outputs/{version}/avg_var_healthy.png")
 
       st.warning(
         f"* We notice the average and variability images did not show "
         f"patterns where we could intuitively differentiate one from another. " 
         f"However, a small difference in the colour pigment of the average images is seen for both labels.")
 
-      st.image(avg_unhealthy, caption='Unhealthy Cherry Leaf - Average and Variability')
+      st.image(avg_powdery_mildew, caption='Powdery Mildew Cherry Leaf - Average and Variability')
       st.image(avg_healthy, caption='Healthy Cherry Leaf - Average and Variability')
       st.write("---")
 
@@ -40,7 +40,7 @@ def page_cherry_leaves_visualizer_body():
 
     if st.checkbox("Image Montage"): 
       st.write("* To refresh the montage, click on the 'Create Montage' button")
-      my_data_dir = 'inputs/malaria_dataset/cell_images'
+      my_data_dir = 'inputs/cherry-leaves/cherry-leaves'
       labels = os.listdir(my_data_dir+ '/validation')
       label_to_display = st.selectbox(label="Select label", options=labels, index=0)
       if st.button("Create Montage"):      
