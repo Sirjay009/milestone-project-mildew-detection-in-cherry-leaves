@@ -25,45 +25,46 @@ To save time in this process, the IT team suggested an ML system that detects in
 
 Extensive consultations with the client and stakeholders culminated in 2 business requirements:
 
-1. Business Requirement 
+1. #### Business Requirement 
 - "Conduct a study to visually differentiate a cherry leaf that is healthy from one that contains powdery mildew." 
   
   The rationale to map this business requirement to the Data Visualisations and ML tasks is predicated on the need to create a human-interpretable, and visual proof of differences between healthy and mildew-infected leaves. This would help field workers recognize symtoms manually without ML tools.
 
-2. Business Requirement
+2. #### Business Requirement
 - "Predicting if a cherry tree is healthy or contains powdery mildew."
   
   The rationale to map this business requirement to the Data Visualisations and ML tasks harps on the goal to automate classificaton for scalability. This would save labor cost as against manual inspection and would also help to reduce economic losses since early detection prevents crop spread.
 
 ## ML Business Case
 
-1. Business Case Title:
+1. #### Business Case Title:
    - Automated Powdery Mildew Detection to Save Cherry Crop Yields
   
-2. Business Objective:
+2. #### Business Objective:
    - Avoid supplying the market with a product of compromised quality. 
 
-3. ML Task translation of Business Case:
+3. #### ML Task translation of Business Case:
    - A binary classification model to distinguish healthy leaves from infected ones, paired with visual explainability tools.
 
-4. Data Availability:
+4. #### Data Availability:
    - Existing dataset of 4,208 labeled cherry leaf images (healthy vs. infected).
   
-5. Technical and Non-Technical Success Metrics:
+5. #### Technical and Non-Technical Success Metrics:
    - Develop a model to classify leaves with 97%+ accuracy.
    - Prototype the model on a Streamlit dashboard.
 
-6. Risks and Constraints:
+6. #### Risks and Constraints:
    - Risk: Model bias due to limited data. Mitigation: Augment dataset with synthetic samples.
    - Constraint: Data provided under an NDA (non-disclosure agreement): Mitigation: Data anonymization.
 
-7. ML Suitability:
+7. #### ML Suitability:
    - Conventional data analysis can be used to conduct a study to visually differentiate a cherry leaf that is healthy from one that contains powdery mildew.
 
 ## Dashboard Design
 
-- List all dashboard pages and their content, either blocks of information or widgets, like buttons, checkboxes, images, or any other items, that your dashboard library supports.
-- Finally, during the project development, you may revisit your dashboard plan to update a given feature (for example, at the beginning of the project, you were confident you would use a given plot to display an insight, but later, you chose another plot type).
+1. ### Quick Project Summary App Screenshot
+   
+![Quick Project Summary Screenshot](docs/images/Capture.PNG1.PNG)
 
 ## Unfixed Bugs
 
