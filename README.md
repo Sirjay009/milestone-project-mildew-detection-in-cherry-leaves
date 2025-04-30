@@ -1,43 +1,5 @@
 # ![CI logo](https://codeinstitute.s3.amazonaws.com/fullstack/ci_logo_small.png)
 
-## Template Instructions
-
-Welcome,
-
-This is the Code Institute student template for the Cherry Leaves project option in Predictive Analytics. We have preinstalled all of the tools you need to get started. It's perfectly okay to use this template as the basis for your project submissions. Click the `Use this template` button above to get started.
-
-You can safely delete the Template Instructions section of this README.md file and modify the remaining paragraphs for your own project. Please do read the Template Instructions at least once, though! It contains some important information about the IDE and the extensions we use.
-
-## How to use this repo
-
-1. Use this template to create your GitHub project repo
-
-1. In your newly created repo click on the green Code button. 
-
-1. Then, from the Codespaces tab, click Create codespace on main.
-
-1. Wait for the workspace to open. This can take a few minutes.
-
-1. Open a new terminal and `pip3 install -r requirements.txt`
-
-1. Open the jupyter_notebooks directory, and click on the notebook you want to open.
-
-1. Click the kernel button and choose Python Environments.
-
-Note that the kernel says Python 3.12.1 as it inherits from the workspace, so it will be Python-3.12.1 as installed by Codespaces. To confirm this, you can use `! python --version` in a notebook code cell.
-
-## Cloud IDE Reminders
-
-To log into the Heroku toolbelt CLI:
-
-1. Log in to your Heroku account and go to _Account Settings_ in the menu under your avatar.
-2. Scroll down to the _API Key_ and click _Reveal_
-3. Copy the key
-4. In the terminal, run `heroku_config`
-5. Paste in your API key when asked
-
-You can now use the `heroku` CLI program - try running `heroku apps` to confirm it works. This API key is unique and private to you, so do not share it. If you accidentally make it public, then you can create a new one with _Regenerate API Key_.
-
 ## Dataset Content
 
 - The dataset is sourced from [Kaggle](https://www.kaggle.com/codeinstitute/cherry-leaves). We then created a fictitious user story where predictive analytics can be applied in a real project in the workplace.
@@ -50,19 +12,53 @@ The cherry plantation crop from Farmy & Foods is facing a challenge where their 
 To save time in this process, the IT team suggested an ML system that detects instantly, using a leaf tree image, if it is healthy or has powdery mildew. A similar manual process is in place for other crops for detecting pests, and if this initiative is successful, there is a realistic chance to replicate this project for all other crops. The dataset is a collection of cherry leaf images provided by Farmy & Foods, taken from their crops.
 
 - 1 - The client is interested in conducting a study to visually differentiate a healthy cherry leaf from one with powdery mildew.
+  
 - 2 - The client is interested in predicting if a cherry leaf is healthy or contains powdery mildew.
 
 ## Hypothesis and how to validate?
 
-- List here your project hypothesis(es) and how you envision validating it (them).
+- We opine that mildew-infected cherry leaves have clear signs of fungus infection, characterized typically by discolouration and white powedry spots all over the leaf, that differentiate them from a healthy cherry leaf.
+  
+- An Image Montage shows that typically a mildew-infected cherry leaf is mostly discoloured and has white powdery patches across it. Average Image, Variability Image and Difference between Averages studies did not reveal any clear pattern to differentiate one from another.
 
 ## The rationale to map the business requirements to the Data Visualisations and ML tasks
 
-- List your business requirements and a rationale to map them to the Data Visualisations and ML tasks.
+Extensive consultations with the client and stakeholders culminated in 2 business requirements:
+
+1. Business Requirement 
+- "Conduct a study to visually differentiate a cherry leaf that is healthy from one that contains powdery mildew." 
+  
+  The rationale to map this business requirement to the Data Visualisations and ML tasks is predicated on the need to create a human-interpretable, and visual proof of differences between healthy and mildew-infected leaves. This would help field workers recognize symtoms manually without ML tools.
+
+2. Business Requirement
+- "Predicting if a cherry tree is healthy or contains powdery mildew."
+  
+  The rationale to map this business requirement to the Data Visualisations and ML tasks harps on the goal to automate classificaton for scalability. This would save labor cost as against manual inspection and would also help to reduce economic losses since early detection prevents crop spread.
 
 ## ML Business Case
 
-- In the previous bullet, you potentially visualised an ML task to answer a business requirement. You should frame the business case using the method we covered in the course.
+1. Business Case Title:
+   - Automated Powdery Mildew Detection to Save Cherry Crop Yields
+  
+2. Business Objective:
+   - Avoid supplying the market with a product of compromised quality. 
+
+3. ML Task translation of Business Case:
+   - A binary classification model to distinguish healthy leaves from infected ones, paired with visual explainability tools.
+
+4. Data Availability:
+   - Existing dataset of 4,208 labeled cherry leaf images (healthy vs. infected).
+  
+5. Technical and Non-Technical Success Metrics:
+   - Develop a model to classify leaves with 97%+ accuracy.
+   - Prototype the model on a Streamlit dashboard.
+
+6. Risks and Constraints:
+   - Risk: Model bias due to limited data. Mitigation: Augment dataset with synthetic samples.
+   - Constraint: Data provided under an NDA (non-disclosure agreement): Mitigation: Data anonymization.
+
+7. ML Suitability:
+   - Conventional data analysis can be used to conduct a study to visually differentiate a cherry leaf that is healthy from one that contains powdery mildew.
 
 ## Dashboard Design
 
