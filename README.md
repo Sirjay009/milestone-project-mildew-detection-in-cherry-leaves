@@ -65,6 +65,7 @@ Extensive consultations with the client and stakeholders culminated in 2 busines
 1. ### Quick Project Summary App Screenshot
    
 ![Quick Project Summary Screenshot](docs/images/Capture.PNG1.PNG)
+    - 
 
 ## Unfixed Bugs
 
