@@ -1,5 +1,3 @@
-# ![CI logo](https://codeinstitute.s3.amazonaws.com/fullstack/ci_logo_small.png)
-
 ## Dataset Content
 
 - The dataset is sourced from [Kaggle](https://www.kaggle.com/codeinstitute/cherry-leaves). We then created a fictitious user story where predictive analytics can be applied in a real project in the workplace.
@@ -38,7 +36,7 @@ Extensive consultations with the client and stakeholders culminated in 2 busines
 ## ML Business Case
 
 1. #### Business Case Title:
-   - Automated Powdery Mildew Detection to Save Cherry Crop Yields
+   - **Automated Powdery Mildew Detection to Save Cherry Crop Yields*
   
 2. #### Business Objective:
    - Avoid supplying the market with a product of compromised quality. 
@@ -60,52 +58,119 @@ Extensive consultations with the client and stakeholders culminated in 2 busines
 7. #### ML Suitability:
    - Conventional data analysis can be used to conduct a study to visually differentiate a cherry leaf that is healthy from one that contains powdery mildew.
 
+8. #### Methodology
+This project follows the CRISP-DM methodology:
+   - Business Understanding
+   - Data Understanding
+   - Data Preparation
+   - Modelling
+   - Evaluation
+   - Deployment
+
 ## Dashboard Design
 
-1. ### Quick Project Summary App Screenshot
-   
-![Quick Project Summary Screenshot](docs/images/Capture.PNG1.PNG)
-    - 
+The dashboard consists of 5 pages including:
+
+1. ### Quick Project Summary Page   
+![Quick Project Summary Dashboard Screenshot](docs/images/Capture.PNG1.PNG)
+- This page creates a general information about the project, the project's dataset and business requirements under consideration.
+- The st.sidebar.radio() widget was used to create radio buttons to display the dashboards menu on the left side of the page.
+- The following streamlit commands were also used on the page
+  - st.write()
+  - st.info()
+  - st.success()
+  
+2. #### Cherry Leaves Visualizer Page
+![Cherry Leaves Visualizer Dashboard Screenshot](docs/images/Capture.PNG2.PNG)
+- This page prototypes our models visual differentiation of a cherry leaf that is healthy from one that contains powdery mildew. Three visualizations are created on this page:
+  - Visualization of the difference between an average and variability cherry leaf image
+  - Visualization of the differences between average unhealthy and healthy cherry leaves
+  - An image montage that selects and visualizes healthy and mildew-infested images
+- The page utilizes checkboxes created using st.selectbox() widget for each visualization section.
+- The st.sidebar.radio() widget was used to create radio buttons to display the dashboards menu on the left side of the page.
+- The following streamlit commands were also used on the page
+  - st.write()
+  - st.info()
+  - st.warning()
+  - st.image()
+
+3. #### Mildew Detection Page
+![Mildew Detection Dashboard Screenshot](docs/images/Capture.PNG3.PNG)
+- On this page, the client can upload a random image and test same for mildew infection. A quick check is conducted on the uploaded image and a prediction is made with 97%+ accuracy on whether the cherry leaf is healthy of not.
+- The st.sidebar.radio() widget was used to create radio buttons to display the dashboards menu on the left side of the page.
+- The following streamlit commands were also used on the page
+  - st.write()
+  - st.info()
+  - st.success()
+  - st.table()
+  - st.markdown()
+
+4. #### Project Hypothesis
+![Project Hypothesis Dashboard Screenshot](docs/images/Capture.PNG4.PNG)
+- This page opines the project's hypothesis and validation.
+- The st.sidebar.radio() widget was used to create radio buttons to display the dashboards menu on the left side of the page.
+- The following streamlit commands were also used on the page
+  - st.write()
+  - st.success()
+
+5. #### ML Performance Metrics
+![ML Performance Metrics Dashboard Screenshot](docs/images/Capture.PNG5.PNG)
+- Information about the frequency distribution of labels on the train, validation and test set is featured here.
+- Information also about our model's performance during training is also disclosed here.
+- The st.sidebar.radio() widget was used to create radio buttons to display the dashboards menu on the left side of the page.
+- The following streamlit commands were also used on the page
+  - st.write()
+  - st.dataframe()
+  - st.image()
+
 
 ## Unfixed Bugs
 
-- You will need to mention unfixed bugs and why they were unfixed. This section should include shortcomings of the frameworks or technologies used. Although time can be a significant variable for consideration, paucity of time and difficulty understanding implementation is not a valid reason to leave bugs unfixed.
+- There are no unfixed bugs
+- A number of technologies were used to develop this project and they include:
+  - Core Technologies
+    - Python
+    - Streamlit
+  - Data Handling and Processing
+    - Pandas
+    - Numpy
+  - Visualization Libraries
+    - Matplotlib
+    - Seaborn
+    - Plotly
+  - Machine Learning
+    - TensorFlow
+  - Others
+    - GitHub
+    - Render
 
 ## Deployment
 
 ### Heroku
 
-- The App live link is: `https://YOUR_APP_NAME.herokuapp.com/`
-- Set the runtime.txt Python version to a [Heroku-20](https://devcenter.heroku.com/articles/python-support#supported-runtimes) stack currently supported version.
-- The project was deployed to Heroku using the following steps.
+- The App live link is: `https://milestone-project-mildew-detection-in-od3y.onrender.com/`
+- The project was deployed to Render using the following steps.
 
-1. Log in to Heroku and create an App
-2. At the Deploy tab, select GitHub as the deployment method.
-3. Select your repository name and click Search. Once it is found, click Connect.
-4. Select the branch you want to deploy, then click Deploy Branch.
-5. The deployment process should happen smoothly if all deployment files are fully functional. Click the button Open App on the top of the page to access your App.
-6. If the slug size is too large, then add large files not required for the app to the .slugignore file.
+1. Create and log in to Render.
+2. Confirm project has requirements.txt file listing all dependencies.
+3. Give Render access to your GitHub repositories.
+4. Type in the start command: $ sh setup.sh && streamlit run app.py
+5. Type in the build command: $ pip install -r requirements.txt
+6. Select 'Free' for Instance Type.
+7. Click 'Create Web Service' to deploy.
+8. The deployment process should happen smoothly if all deployment files are fully functional. 
+9. Click the live link on the top of the page to access your App.
 
 ## Main Data Analysis and Machine Learning Libraries
 
-- Here, you should list the libraries used in the project and provide an example(s) of how you used these libraries.
+- Main Data Analysis Libraries
+    - Pandas: Was used in the modelling and evaluation notebook whilst training the dataset, to create a structured tabular representation (DataFrame) of image data distribution
+    - Numpy: Was used in the data visualization notebook to handle and append image arrays, reshape image arrays amongs others.
+- Main Machine Learning Libraries
+    - Scikit-learn: Used as a general-purpose machine learning library for our binary classification task.
+    - TensorFlow: Used to conduct deep learning for image classification neural networks.
 
 ## Credits
 
-- In this section, you need to reference where you got your content, media and from where you got extra help. It is common practice to use code from other repositories and tutorials. However, it is necessary to be very specific about these sources to avoid plagiarism.
-- You can break the credits section up into Content and Media, depending on what you have included in your project.
-
-### Content
-
-- The text for the Home page was taken from Wikipedia Article A.
-- Instructions on how to implement form validation on the Sign-Up page were taken from [Specific YouTube Tutorial](https://www.youtube.com/).
-- The icons in the footer were taken from [Font Awesome](https://fontawesome.com/).
-
-### Media
-
-- The photos used on the home and sign-up page are from This Open-Source site.
-- The images used for the gallery page were taken from this other open-source site.
-
-## Acknowledgements (optional)
-
-- Thank the people who provided support throughout this project.
+- The bulk of the notebooks, code, processes and techniques employed to actualize the project was lifted from Code Institute's Malaria Detection Walkthrough project.
+- The text and information about powdery mildew was taken from https://en.wikipedia.org/wiki/Powdery_mildew and https://phys.org/news/2018-01-combination-resistance-genes-wheat-powdery.html
