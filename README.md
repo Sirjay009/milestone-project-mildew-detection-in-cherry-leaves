@@ -146,7 +146,7 @@ The dashboard consists of 5 pages including:
 
 ## Deployment
 
-### Heroku
+### Render
 
 - The App live link is: `https://milestone-project-mildew-detection-in-od3y.onrender.com/`
 - The project was deployed to Render using the following steps.
