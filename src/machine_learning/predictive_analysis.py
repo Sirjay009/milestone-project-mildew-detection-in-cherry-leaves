@@ -6,10 +6,6 @@ from tensorflow.keras.models import load_model
 from PIL import Image
 from src.data_management import load_pkl_file
 
-# Load the model globally so it only loads once
-MODEL_PATH = "outputs/v1/mildew_detector_model.keras"
-model = load_model(MODEL_PATH)
-
 
 def plot_predictions_probabilities(pred_proba, pred_class):
     """
@@ -52,6 +48,10 @@ def load_model_and_predict(my_image, version):
     """
     Perform ML prediction over live images using pre-loaded model
     """
+
+    # Load model only when a prediction is requested
+    model_path = f"outputs/{version}/mildew_detector_model.keras"
+    model = load_model(model_path)
 
     pred_proba = model.predict(my_image)[0, 0]
 
