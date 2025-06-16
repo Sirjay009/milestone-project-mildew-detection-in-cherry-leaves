@@ -7,7 +7,7 @@ from PIL import Image
 from src.data_management import load_pkl_file
 
 # Load the model globally so it only loads once
-MODEL_PATH = "outputs/v1/malaria_detector_model.keras"
+MODEL_PATH = "outputs/v1/mildew_detector_model.keras"
 model = load_model(MODEL_PATH)
 
 
