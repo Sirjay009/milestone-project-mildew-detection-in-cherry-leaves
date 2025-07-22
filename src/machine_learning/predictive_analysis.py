@@ -64,7 +64,9 @@ def load_model_and_predict(interpreter, my_image):
     """
     Perform prediction using a pre-loaded TFLite model interpreter.
     """
+    # Allocate tensors
     interpreter.allocate_tensors()
+
     input_details = interpreter.get_input_details()
     output_details = interpreter.get_output_details()
 
@@ -73,18 +75,23 @@ def load_model_and_predict(interpreter, my_image):
 
     # Set input tensor
     interpreter.set_tensor(input_details[0]['index'], my_image)
+
+    # Run inference
     interpreter.invoke()
 
     # Get prediction
     pred_proba = interpreter.get_tensor(output_details[0]['index'])[0][0]
 
-    # Interpret result
-    pred_class = "Parasitised" if pred_proba < 0.5 else "Uninfected"
-    confidence = 1 - pred_proba if pred_class == "Parasitised" else pred_proba
+    # Threshold: if prob > 0.5, it's class 1 → 'powdery_mildew'
+    if pred_proba > 0.5:
+        pred_class = 'powdery_mildew'
+        confidence = pred_proba
+    else:
+        pred_class = 'healthy'
+        confidence = 1 - pred_proba
 
     st.write(
-        f"The predictive analysis indicates the sample leaf is **{pred_class.lower()}** "
-        f"with a confidence of **{confidence*100:.2f}%**."
-    )
+        f"The predictive analysis indicates the sample leaf is "
+        f"**{pred_class.replace('_', ' ')}** with a confidence of **{confidence*100:.2f}%**.")
 
     return confidence, pred_class
