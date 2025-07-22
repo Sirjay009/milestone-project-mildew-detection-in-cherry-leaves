@@ -65,30 +65,26 @@ def load_model_and_predict(interpreter, my_image):
     Perform prediction using a pre-loaded TFLite model interpreter.
     """
     interpreter.allocate_tensors()
-
     input_details = interpreter.get_input_details()
     output_details = interpreter.get_output_details()
 
-    # 🔍 Debugging: check expected input shape
-    st.write("Model expects input shape:", input_details[0]['shape'])
-    st.write("Your input image shape:", my_image.shape)
+    # Ensure data is float32
+    my_image = my_image.astype(np.float32)
 
     # Set input tensor
     interpreter.set_tensor(input_details[0]['index'], my_image)
     interpreter.invoke()
 
+    # Get prediction
     pred_proba = interpreter.get_tensor(output_details[0]['index'])[0][0]
 
-    if pred_proba > 0.5:
-        pred_class = "Uninfected"
-        confidence = pred_proba
-    else:
-        pred_class = "Parasitised"
-        confidence = 1 - pred_proba
+    # Interpret result
+    pred_class = "Parasitised" if pred_proba < 0.5 else "Uninfected"
+    confidence = 1 - pred_proba if pred_class == "Parasitised" else pred_proba
 
     st.write(
-        f"The predictive analysis indicates the sample leaf is "
-        f"**{pred_class.lower()}** with a confidence of **{confidence:.2%}**."
+        f"The predictive analysis indicates the sample leaf is **{pred_class.lower()}** "
+        f"with a confidence of **{confidence*100:.2f}%**."
     )
 
     return confidence, pred_class
