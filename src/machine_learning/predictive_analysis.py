@@ -2,9 +2,24 @@ import streamlit as st
 import numpy as np
 import pandas as pd
 import plotly.express as px
-from tensorflow.keras.models import load_model
+import tensorflow as tf
 from PIL import Image
 from src.data_management import load_pkl_file
+
+
+# Load TFLite model only once at the global level
+@st.cache_resource
+def load_tflite_model(version):
+    interpreter = tf.lite.Interpreter(
+        model_path=f"outputs/{version}/mildew_detector_model.tflite")
+    interpreter.allocate_tensors()
+    return interpreter
+
+
+# Load image shape only once
+@st.cache_data
+def get_image_shape(version):
+    return load_pkl_file(file_path=f"outputs/{version}/image_shape.pkl")
 
 
 def plot_predictions_probabilities(pred_proba, pred_class):
@@ -37,23 +52,26 @@ def resize_input_image(img, version):
     """
     Reshape image to average image size
     """
-    image_shape = load_pkl_file(file_path=f"outputs/{version}/image_shape.pkl")
+    image_shape = get_image_shape(version)
     img_resized = img.resize((image_shape[1], image_shape[0]), Image.LANCZOS)
-    my_image = np.expand_dims(img_resized, axis=0)/255
+    my_image = np.array(img_resized) / 255.0
+    my_image = np.expand_dims(my_image, axis=0).astype(np.float32)
 
     return my_image
 
 
 def load_model_and_predict(my_image, version):
     """
-    Perform ML prediction over live images using pre-loaded model
+    Perform prediction using a pre-loaded TFLite model
     """
+    interpreter = load_tflite_model(version)
 
-    # Load model only when a prediction is requested
-    model_path = f"outputs/{version}/mildew_detector_model.keras"
-    model = load_model(model_path)
+    input_details = interpreter.get_input_details()
+    output_details = interpreter.get_output_details()
 
-    pred_proba = model.predict(my_image)[0, 0]
+    interpreter.set_tensor(input_details[0]['index'], my_image)
+    interpreter.invoke()
+    pred_proba = interpreter.get_tensor(output_details[0]['index'])[0][0]
 
     target_map = {v: k for k, v in {'Parasitised': 0, 'Uninfected': 1}.items()}
     pred_class = target_map[pred_proba > 0.5]
@@ -62,6 +80,5 @@ def load_model_and_predict(my_image, version):
 
     st.write(
         f"The predictive analysis indicates the sample cell is "
-        f"**{pred_class.lower()}** with malaria.")
-
+        f"**{pred_class.lower()}** with mildew.")
     return pred_proba, pred_class
