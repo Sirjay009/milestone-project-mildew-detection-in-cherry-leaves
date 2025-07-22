@@ -32,7 +32,7 @@ def page_mildew_detector_body():
 
     images_buffer = st.file_uploader(
         "Upload samples. You may select more than one.",
-        type="png",
+        type=["png", "jpg", "jpeg"],
         accept_multiple_files=True,
     )
 
