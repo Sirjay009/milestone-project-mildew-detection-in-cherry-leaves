@@ -79,16 +79,20 @@ def load_model_and_predict(interpreter, my_image):
     # Run inference
     interpreter.invoke()
 
-    # Get prediction
+    # Get prediction probability for class 1 ("Uninfected")
     pred_proba = interpreter.get_tensor(output_details[0]['index'])[0][0]
 
-    target_map = {v: k for k, v in {'Parasitised': 0, 'Uninfected': 1}.items()}
-    pred_class = target_map[pred_proba > 0.5]
-    if pred_class == target_map[0]:
-        pred_proba = 1 - pred_proba
+    # Classify based on threshold
+    if pred_proba > 0.5:
+        pred_class = "Uninfected"
+        confidence = pred_proba
+    else:
+        pred_class = "Parasitised"
+        confidence = 1 - pred_proba
 
     st.write(
-        f"The predictive analysis indicates the sample cell is "
-        f"**{pred_class.lower()}** with mildew.")
+        f"The predictive analysis indicates the sample leaf is "
+        f"**{pred_class.lower()}** with a confidence of **{confidence:.2%}**."
+    )
 
-    return pred_proba, pred_class
+    return confidence, pred_class
