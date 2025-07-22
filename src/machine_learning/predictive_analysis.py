@@ -64,34 +64,45 @@ def load_model_and_predict(interpreter, my_image):
     """
     Perform prediction using a pre-loaded TFLite model interpreter.
     """
-    # Allocate tensors
-    interpreter.allocate_tensors()
+    try:
+        # Allocate tensors
+        interpreter.allocate_tensors()
 
-    input_details = interpreter.get_input_details()
-    output_details = interpreter.get_output_details()
+        input_details = interpreter.get_input_details()
+        output_details = interpreter.get_output_details()
 
-    # Ensure data is float32
-    my_image = my_image.astype(np.float32)
+        expected_shape = input_details[0]['shape']  # e.g., [1, 256, 256, 3]
 
-    # Set input tensor
-    interpreter.set_tensor(input_details[0]['index'], my_image)
+        # Ensure float32
+        my_image = my_image.astype(np.float32)
 
-    # Run inference
-    interpreter.invoke()
+        # ✅ SHAPE CHECK
+        if list(my_image.shape) != list(expected_shape):
+            st.error(f"❌ Input image shape mismatch! Expected: {expected_shape}, got: {my_image.shape}")
+            return None, None
 
-    # Get prediction
-    pred_proba = interpreter.get_tensor(output_details[0]['index'])[0][0]
+        # Set input tensor
+        interpreter.set_tensor(input_details[0]['index'], my_image)
 
-    # Threshold: if prob > 0.5, it's class 1 → 'powdery_mildew'
-    if pred_proba > 0.5:
-        pred_class = 'powdery_mildew'
-        confidence = pred_proba
-    else:
-        pred_class = 'healthy'
-        confidence = 1 - pred_proba
+        # Run inference
+        interpreter.invoke()
 
-    st.write(
-        f"The predictive analysis indicates the sample leaf is "
-        f"**{pred_class.replace('_', ' ')}** with a confidence of **{confidence*100:.2f}%**.")
+        # Get prediction
+        pred_proba = interpreter.get_tensor(output_details[0]['index'])[0][0]
 
-    return confidence, pred_class
+        # Classify
+        if pred_proba > 0.5:
+            pred_class = 'powdery_mildew'
+            confidence = pred_proba
+        else:
+            pred_class = 'healthy'
+            confidence = 1 - pred_proba
+
+        st.success(
+            f"The predictive analysis indicates the sample leaf is "
+            f"**{pred_class.replace('_', ' ')}** with a confidence of **{confidence*100:.2f}%**.")
+        return confidence, pred_class
+
+    except Exception as e:
+        st.error(f"⚠️ An error occurred during prediction:\n\n{e}")
+        return None, None
