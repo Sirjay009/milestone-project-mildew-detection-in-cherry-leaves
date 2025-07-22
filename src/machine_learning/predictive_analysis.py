@@ -60,17 +60,26 @@ def resize_input_image(img, version):
     return my_image
 
 
-def load_model_and_predict(my_image, version):
+def load_model_and_predict(interpreter, my_image):
     """
-    Perform prediction using a pre-loaded TFLite model
+    Perform prediction using a pre-loaded TFLite model interpreter.
     """
-    interpreter = load_tflite_model(version)
+    # Allocate tensors (safe to call again; no overhead if already done)
+    interpreter.allocate_tensors()
 
     input_details = interpreter.get_input_details()
     output_details = interpreter.get_output_details()
 
+    # Ensure data is float32
+    my_image = my_image.astype(np.float32)
+
+    # Set input tensor
     interpreter.set_tensor(input_details[0]['index'], my_image)
+
+    # Run inference
     interpreter.invoke()
+
+    # Get prediction
     pred_proba = interpreter.get_tensor(output_details[0]['index'])[0][0]
 
     target_map = {v: k for k, v in {'Parasitised': 0, 'Uninfected': 1}.items()}
@@ -81,4 +90,5 @@ def load_model_and_predict(my_image, version):
     st.write(
         f"The predictive analysis indicates the sample cell is "
         f"**{pred_class.lower()}** with mildew.")
+
     return pred_proba, pred_class
