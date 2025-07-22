@@ -9,89 +9,107 @@ from matplotlib.image import imread
 import itertools
 import random
 
+
 def page_cherry_leaves_visualizer_body():
-    st.write("### Cherry Leaves Visualizer")
+    st.write("### 🍒 Cherry Leaves Visualizer")
     st.info(
-        f"* The client is interested in having a study that visually "
-        f"differentiates a cherry leaf that is healthy from one that contains powdery mildew.")
-    
+        "* The client is interested in a study that visually distinguishes "
+        "healthy cherry leaves from those infected with powdery mildew."
+    )
+
     version = 'v1'
-    if st.checkbox("Difference between average and variability image"):
-      
-      avg_powdery_mildew = plt.imread(f"outputs/{version}/avg_var_powdery_mildew.png")
-      avg_healthy = plt.imread(f"outputs/{version}/avg_var_healthy.png")
 
-      st.warning(
-        f"* We notice the average and variability images did not show "
-        f"patterns where we could intuitively differentiate one from another. " 
-        f"However, a small difference in the colour pigment of the average images is seen for both labels.")
+    # Section 1: Average and Variability Images
+    if st.checkbox("📊 Show Average and Variability Images"):
+        try:
+            avg_pm = imread(f"outputs/{version}/avg_var_powdery_mildew.png")
+            avg_healthy = imread(f"outputs/{version}/avg_var_healthy.png")
 
-      st.image(avg_powdery_mildew, caption='Powdery Mildew Cherry Leaf - Average and Variability')
-      st.image(avg_healthy, caption='Healthy Cherry Leaf - Average and Variability')
-      st.write("---")
+            st.warning(
+                "* The average and variability images show only subtle color differences "
+                "between healthy and mildew-infected leaves."
+            )
+            st.image(avg_pm, caption="Powdery Mildew - Average and Variability", use_column_width=True)
+            st.image(avg_healthy, caption="Healthy Leaf - Average and Variability", use_column_width=True)
+        except FileNotFoundError:
+            st.error("❌ Average/variability image files not found.")
+        st.write("---")
 
-    if st.checkbox("Differences between average unhealthy and average healthy cherry leaves"):
-          diff_between_avgs = plt.imread(f"outputs/{version}/avg_diff.png")
+    # Section 2: Difference Image
+    if st.checkbox("🧮 Show Difference Between Average Images"):
+        try:
+            diff_img = imread(f"outputs/{version}/avg_diff.png")
+            st.warning(
+                "* This comparison also doesn't show strong visual cues "
+                "between healthy and infected leaves."
+            )
+            st.image(diff_img, caption="Difference Between Average Images", use_column_width=True)
+        except FileNotFoundError:
+            st.error("❌ Difference image file not found.")
+        st.write("---")
 
-          st.warning(
-            f"* We notice this study didn't show "
-            f"patterns where we could intuitively differentiate one from another.")
-          st.image(diff_between_avgs, caption='Difference between average images')
+    # Section 3: Image Montage
+    if st.checkbox("🖼️ Show Image Montage"):
+        st.write("* Click the 'Create Montage' button to refresh the image grid.")
 
-    if st.checkbox("Image Montage"): 
-      st.write("* To refresh the montage, click on the 'Create Montage' button")
-      my_data_dir = 'inputs/cherry-leaves/cherry-leaves'
-      labels = os.listdir(my_data_dir+ '/validation')
-      label_to_display = st.selectbox(label="Select label", options=labels, index=0)
-      if st.button("Create Montage"):      
-        image_montage(dir_path= my_data_dir + '/validation',
-                      label_to_display=label_to_display,
-                      nrows=8, ncols=3, figsize=(10,25))
-      st.write("---")
+        my_data_dir = 'inputs/cherry-leaves/cherry-leaves/validation'
+        if os.path.exists(my_data_dir):
+            labels = os.listdir(my_data_dir)
+            label_to_display = st.selectbox("Select label", options=labels, index=0)
+
+            if st.button("Create Montage"):
+                image_montage(
+                    dir_path=my_data_dir,
+                    label_to_display=label_to_display,
+                    nrows=4, ncols=2, figsize=(10, 12)  # Reduced for performance
+                )
+        else:
+            st.error("❌ Image directory not found.")
+        st.write("---")
 
 
+def image_montage(dir_path, label_to_display, nrows=4, ncols=2, figsize=(10, 12)):
+    sns.set_style("white")
+    labels = os.listdir(dir_path)
 
-def image_montage(dir_path, label_to_display, nrows, ncols, figsize=(15,10)):
-  sns.set_style("white")
-  labels = os.listdir(dir_path)
+    # Ensure selected label is valid
+    if label_to_display not in labels:
+        st.warning("⚠️ The label you selected doesn't exist.")
+        st.info(f"Available labels: {labels}")
+        return
 
-  # subset the class you are interested to display
-  if label_to_display in labels:
+    # Get image list for the label
+    image_dir = os.path.join(dir_path, label_to_display)
+    images_list = os.listdir(image_dir)
 
-    # checks if your montage space is greater than subset size
-    # how many images in that folder
-    images_list = os.listdir(dir_path+'/'+ label_to_display)
-    if nrows * ncols < len(images_list):
-      img_idx = random.sample(images_list, nrows * ncols)
+    # Limit number of images to avoid memory overload
+    max_images = nrows * ncols
+    if len(images_list) < max_images:
+        st.warning(
+            f"Only {len(images_list)} images available — montage will fill only part of the grid."
+        )
+        img_idx = images_list
+        # Adjust grid size dynamically
+        nrows = int(np.ceil(len(img_idx) / ncols))
     else:
-      print(
-          f"Decrease nrows or ncols to create your montage. \n"
-          f"There are {len(images_list)} in your subset. "
-          f"You requested a montage with {nrows * ncols} spaces")
-      return
-    
+        img_idx = random.sample(images_list, max_images)
 
-    # create list of axes indices based on nrows and ncols
-    list_rows= range(0,nrows)
-    list_cols= range(0,ncols)
-    plot_idx = list(itertools.product(list_rows,list_cols))
+    # Prepare plot layout
+    fig, axes = plt.subplots(nrows=nrows, ncols=ncols, figsize=figsize)
+    axes = axes.flatten()  # Flatten in case of 1D axes
 
+    for i, img_name in enumerate(img_idx):
+        img_path = os.path.join(image_dir, img_name)
+        img = imread(img_path)
+        img_shape = img.shape
+        axes[i].imshow(img)
+        axes[i].set_title(f"{img_shape[1]}px × {img_shape[0]}px")
+        axes[i].axis("off")
 
-    # create a Figure and display images
-    fig, axes = plt.subplots(nrows=nrows,ncols=ncols, figsize=figsize)
-    for x in range(0,nrows*ncols):
-      img = imread(dir_path + '/' + label_to_display + '/' + img_idx[x])
-      img_shape = img.shape
-      axes[plot_idx[x][0], plot_idx[x][1]].imshow(img)
-      axes[plot_idx[x][0], plot_idx[x][1]].set_title(f"Width {img_shape[1]}px x Height {img_shape[0]}px")
-      axes[plot_idx[x][0], plot_idx[x][1]].set_xticks([])
-      axes[plot_idx[x][0], plot_idx[x][1]].set_yticks([])
+    # Hide unused axes
+    for j in range(len(img_idx), len(axes)):
+        axes[j].axis("off")
+
     plt.tight_layout()
-    
-    st.pyplot(fig=fig)
-    # plt.show()
-
-
-  else:
-    print("The label you selected doesn't exist.")
-    print(f"The existing options are: {labels}")
+    st.pyplot(fig)
+    plt.close(fig)  # Free memory
