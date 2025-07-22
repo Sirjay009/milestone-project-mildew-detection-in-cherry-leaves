@@ -64,25 +64,21 @@ def load_model_and_predict(interpreter, my_image):
     """
     Perform prediction using a pre-loaded TFLite model interpreter.
     """
-    # Allocate tensors (safe to call again; no overhead if already done)
     interpreter.allocate_tensors()
 
     input_details = interpreter.get_input_details()
     output_details = interpreter.get_output_details()
 
-    # Ensure data is float32
-    my_image = my_image.astype(np.float32)
+    # 🔍 Debugging: check expected input shape
+    st.write("Model expects input shape:", input_details[0]['shape'])
+    st.write("Your input image shape:", my_image.shape)
 
     # Set input tensor
     interpreter.set_tensor(input_details[0]['index'], my_image)
-
-    # Run inference
     interpreter.invoke()
 
-    # Get prediction probability for class 1 ("Uninfected")
     pred_proba = interpreter.get_tensor(output_details[0]['index'])[0][0]
 
-    # Classify based on threshold
     if pred_proba > 0.5:
         pred_class = "Uninfected"
         confidence = pred_proba
