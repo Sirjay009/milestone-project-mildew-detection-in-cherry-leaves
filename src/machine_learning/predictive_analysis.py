@@ -24,27 +24,33 @@ def get_image_shape(version):
 
 def plot_predictions_probabilities(pred_proba, pred_class):
     """
-    Plot prediction probability results
+    Plot prediction probability results.
     """
 
-    prob_per_class = pd.DataFrame(
-        data=[0, 0],
-        index={'Parasitised': 0, 'Healthy': 1}.keys(),
-        columns=['Probability']
-    )
-    prob_per_class.loc[pred_class] = pred_proba
-    for x in prob_per_class.index.to_list():
-        if x not in pred_class:
-            prob_per_class.loc[x] = 1 - pred_proba
-    prob_per_class = prob_per_class.round(3)
-    prob_per_class['Diagnostic'] = prob_per_class.index
+    # Set the correct mapping
+    all_classes = ['Healthy', 'Powdery Mildew']
+    prob_per_class = pd.DataFrame(columns=['Diagnostic', 'Probability'])
+
+    try:
+        for class_name in all_classes:
+            prob = pred_proba if class_name == pred_class else 1 - pred_proba
+            prob_per_class = prob_per_class._append({
+                'Diagnostic': class_name,
+                'Probability': round(prob, 3)
+            }, ignore_index=True)
+    except Exception as e:
+        st.warning(f"⚠️ Could not plot prediction: {e}")
+        return
 
     fig = px.bar(
         prob_per_class,
         x='Diagnostic',
-        y=prob_per_class['Probability'],
+        y='Probability',
         range_y=[0, 1],
-        width=600, height=300, template='seaborn')
+        width=600,
+        height=300,
+        template='seaborn'
+    )
     st.plotly_chart(fig)
 
 
@@ -60,25 +66,30 @@ def resize_input_image(img, version):
     return my_image
 
 
-def load_model_and_predict(interpreter, my_image):
+def load_model_and_predict(interpreter, my_image): 
     """
     Perform prediction using a pre-loaded TFLite model interpreter.
     """
+
     try:
-        # Allocate tensors
+        # Allocate tensors (safe to re-call)
         interpreter.allocate_tensors()
 
         input_details = interpreter.get_input_details()
         output_details = interpreter.get_output_details()
 
-        expected_shape = input_details[0]['shape']  # e.g., [1, 256, 256, 3]
+        expected_shape = input_details[0]['shape']  # Example: [1, 256, 256, 3]
 
-        # Ensure float32
+        # Ensure image is float32
         my_image = my_image.astype(np.float32)
 
-        # ✅ SHAPE CHECK
+        # ✅ Shape Validation
         if list(my_image.shape) != list(expected_shape):
-            st.error(f"❌ Input image shape mismatch! Expected: {expected_shape}, got: {my_image.shape}")
+            st.error(
+                f"❌ Input image shape mismatch!\n\n"
+                f"Expected: {expected_shape}, Got: {my_image.shape}\n\n"
+                f"Please ensure your image has 3 color channels (RGB)."
+            )
             return None, None
 
         # Set input tensor
@@ -90,19 +101,25 @@ def load_model_and_predict(interpreter, my_image):
         # Get prediction
         pred_proba = interpreter.get_tensor(output_details[0]['index'])[0][0]
 
-        # Classify
+        # Interpret prediction
         if pred_proba > 0.5:
-            pred_class = 'powdery_mildew'
+            pred_class = 'Powdery Mildew'
             confidence = pred_proba
         else:
-            pred_class = 'healthy'
+            pred_class = 'Healthy'
             confidence = 1 - pred_proba
 
+        # Display result
         st.success(
-            f"The predictive analysis indicates the sample leaf is "
-            f"**{pred_class.replace('_', ' ')}** with a confidence of **{confidence*100:.2f}%**.")
+            f"✅ The predictive analysis indicates the sample leaf is "
+            f"**{pred_class}** with a confidence of **{confidence * 100:.2f}%**."
+        )
+
         return confidence, pred_class
 
-    except Exception as e:
-        st.error(f"⚠️ An error occurred during prediction:\n\n{e}")
+    except Exception:
+        st.error(
+            "⚠️ An unexpected error occurred during prediction. "
+            "Please try another image or check the input format."
+        )
         return None, None
