@@ -2,6 +2,13 @@
 
 - The dataset is sourced from [Kaggle](https://www.kaggle.com/codeinstitute/cherry-leaves). We then created a fictitious user story where predictive analytics can be applied in a real project in the workplace.
 - The dataset contains +4 thousand images taken from the client's crop fields. The images show healthy cherry leaves and cherry leaves that have powdery mildew, a fungal disease that affects many plant species. The cherry plantation crop is one of the finest products in their portfolio, and the company is concerned about supplying the market with a compromised quality product.
+- The dataset ratio of train/validation/test set sizes is:
+  - train - healthy: 1472 images
+  - train - powdery_mildew: 1472 images
+  - validation - healthy: 210 images
+  - validation - powdery_mildew: 210 images
+  - test - healthy: 422 images
+  - test - powdery_mildew: 422 images
 
 ## Business Requirements
 
@@ -58,7 +65,7 @@ Extensive consultations with the client and stakeholders culminated in 2 busines
 7. #### ML Suitability:
    - Conventional data analysis can be used to conduct a study to visually differentiate a cherry leaf that is healthy from one that contains powdery mildew.
 
-8. #### Methodology
+8. #### Methodology:
 This project follows the CRISP-DM methodology:
    - Business Understanding
    - Data Understanding
